@@ -1,5 +1,6 @@
 import 'package:blogapp/contants/constants.dart';
 import 'package:blogapp/controller/post_controller.dart';
+import 'package:blogapp/views/details.dart';
 import 'package:blogapp/views/widgets/blog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -78,15 +79,25 @@ class HomePagetState extends State<HomePage> {
                             shrinkWrap: true,
                             itemCount: _postController.posts.value.length,
                             itemBuilder: (context, index) {
-                              return BlogWidget(
-                                  title:
-                                      _postController.posts.value[index].title,
-                                  image:
-                                      '$postImageurl${_postController.posts.value[index].image}',
-                                  body: _postController.posts.value[index].body,
-                                  created_at: _postController
-                                      .posts.value[index].createdAt
-                                      .toIso8601String());
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(() => PostDetail(
+                                        posts:
+                                            _postController.posts.value[index],
+                                      ));
+                                },
+                                child: BlogWidget(
+                                  // title:
+                                  //     _postController.posts.value[index].title,
+                                  // image:
+                                  //     '$postImageurl${_postController.posts.value[index].image}',
+                                  // body: _postController.posts.value[index].body,
+                                  // created_at: _postController
+                                  //     .posts.value[index].createdAt
+                                  //     .toIso8601String()
+                                  posts: _postController.posts.value[index],
+                                ),
+                              );
                             });
                   }),
                 ),
