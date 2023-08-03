@@ -25,4 +25,9 @@ class Post extends Model
     {
         return $this->hasMany(Category::class, 'post_id');
     }
+
+    public function comments() : HasMany
+    {
+        return $this->hasMany(Comment::class, 'post_id');
+    }
 }

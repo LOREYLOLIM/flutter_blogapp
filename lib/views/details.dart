@@ -1,6 +1,8 @@
 import 'package:blogapp/contants/constants.dart';
+import 'package:blogapp/controller/post_controller.dart';
 import 'package:blogapp/models/posts.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PostDetail extends StatefulWidget {
   const PostDetail({super.key, required this.posts});
@@ -12,6 +14,16 @@ class PostDetail extends StatefulWidget {
 }
 
 class _PostDetailState extends State<PostDetail> {
+  final PostController _postController = Get.put(PostController());
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _postController.getComments(widget.posts.id);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +57,30 @@ class _PostDetailState extends State<PostDetail> {
           Text(
             'Posted At ${widget.posts.createdAt.toIso8601String()}',
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          )
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Obx(() {
+            return _postController.isLoading.value
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.builder(
+                    itemCount: _postController.comments.value.length,
+                    shrinkWrap: true,
+                    itemBuilder: ((context, index) {
+                      return ListTile(
+                        title:
+                            Text(_postController.comments.value[index].comment),
+                        subtitle:
+                            Text(_postController.comments.value[index].name),
+                        trailing:
+                            Text(_postController.comments.value[index].email),
+                      );
+                    }),
+                  );
+          })
         ],
       ),
     );
